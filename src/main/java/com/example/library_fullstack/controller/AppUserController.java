@@ -8,14 +8,13 @@ import com.example.library_fullstack.entity.AppUser;
 import com.example.library_fullstack.entity.LibraryBook;
 import com.example.library_fullstack.entity.Loan;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -43,6 +42,14 @@ public class AppUserController {
     public String getBookView(Model model){
         List<LibraryBook> libraryBookList = libraryBookRepository.findAll();
         model.addAttribute("bookList",libraryBookList);
+        return "books-view";
+    }
+
+    //*** 2
+    @GetMapping("/search")
+    public String findBook(@RequestParam(value = "search", required = false) String libraryBookTitle, Model model){
+        List<LibraryBook> libraryBookList = libraryBookRepository.findByTitleContainsIgnoreCase(libraryBookTitle);
+        model.addAttribute("searchResult", libraryBookList);
         return "books-view";
     }
 
@@ -96,4 +103,6 @@ public class AppUserController {
         loanRepository.save(loan);
         return "redirect:/index";
     }
+
+
 }
