@@ -18,7 +18,8 @@
         <form th:object="${searchResult}" th:action="@{/search}" metiod="get">
             <input type="text" name="search" id="search" placeholder="Enter the book title" />
             <input type="submit" value="Search">
-            <div th:if="${searchResult == null || searchResult.isEmpty()}">
+<!--            <div th:if="${searchResult == null || searchResult.isEmpty()}">-->
+            <div>
                 <table class="table">
                     <thead>
                     <tr>
@@ -27,7 +28,13 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="book: ${bookList}">
+                    <tr th:if="${searchResult == null || searchResult.isEmpty()}" th:each="book: ${bookList}">
+                        <td><span th:text="${book.title}"></span></td>
+                        <td><span th:text="${book.maxLoanDays}"></span></td>
+                        <td th:if="${book.isAvailable()}"><a class="btn btn-primary btn-sm" th:href="@{/create/loan/{id} (id=${book.libraryBookId})}">Borrow</a></td>
+                        <td th:if="${!book.isAvailable()}"><span>Not Available</span></td>
+                    </tr>
+                    <tr th:enless="${searchResult == null || searchResult.isEmpty()}" th:each="book: ${searchResult}">
                         <td><span th:text="${book.title}"></span></td>
                         <td><span th:text="${book.maxLoanDays}"></span></td>
                         <td th:if="${book.isAvailable()}"><a class="btn btn-primary btn-sm" th:href="@{/create/loan/{id} (id=${book.libraryBookId})}">Borrow</a></td>
@@ -36,24 +43,24 @@
                     </tbody>
                 </table>
             </div>
-            <div th:enless="${searchResult == null || searchResult.isEmpty()}">
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th scope="col">Title</th>
-                        <th scope="col">Max loan days</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="book: ${searchResult}">
-                        <td><span th:text="${book.title}"></span></td>
-                        <td><span th:text="${book.maxLoanDays}"></span></td>
-                        <td th:if="${book.isAvailable()}"><a class="btn btn-primary btn-sm" th:href="@{/create/loan/{id} (id=${book.libraryBookId})}">Borrow</a></td>
-                        <td th:if="${!book.isAvailable()}"><span>Not Available</span></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+<!--            <div th:enless="${searchResult == null || searchResult.isEmpty()}">-->
+<!--                <table class="table">-->
+<!--                    <thead>-->
+<!--                    <tr>-->
+<!--                        <th scope="col">Title</th>-->
+<!--                        <th scope="col">Max loan days</th>-->
+<!--                    </tr>-->
+<!--                    </thead>-->
+<!--                    <tbody>-->
+<!--                    <tr th:each="book: ${searchResult}">-->
+<!--                        <td><span th:text="${book.title}"></span></td>-->
+<!--                        <td><span th:text="${book.maxLoanDays}"></span></td>-->
+<!--                        <td th:if="${book.isAvailable()}"><a class="btn btn-primary btn-sm" th:href="@{/create/loan/{id} (id=${book.libraryBookId})}">Borrow</a></td>-->
+<!--                        <td th:if="${!book.isAvailable()}"><span>Not Available</span></td>-->
+<!--                    </tr>-->
+<!--                    </tbody>-->
+<!--                </table>-->
+<!--            </div>-->
         </form>
 
 
