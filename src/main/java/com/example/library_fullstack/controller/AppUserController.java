@@ -45,11 +45,11 @@ public class AppUserController {
         return "books-view";
     }
 
-    //*** 2
+    //Method of Searching for a book or books
     @GetMapping("/search")
     public String findBook(@RequestParam(value = "search", required = false) String libraryBookTitle, Model model){
-        List<LibraryBook> libraryBookList = libraryBookRepository.findByTitleContainsIgnoreCase(libraryBookTitle);
-        model.addAttribute("searchResult", libraryBookList);
+        List<LibraryBook> searchedBookList = libraryBookRepository.findByTitleContainsIgnoreCase(libraryBookTitle);
+        model.addAttribute("searchResult", searchedBookList);
         return "books-view";
     }
 

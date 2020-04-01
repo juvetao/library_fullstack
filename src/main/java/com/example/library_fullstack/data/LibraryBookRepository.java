@@ -9,6 +9,6 @@ import java.util.Optional;
 public interface LibraryBookRepository extends CrudRepository<LibraryBook,Integer> {
     List<LibraryBook> findAll();
 
-    //*** 1
+    //Search for a book or books with at least a keyword and then a list of books will be shown
     List<LibraryBook> findByTitleContainsIgnoreCase(String bookName);
 }
