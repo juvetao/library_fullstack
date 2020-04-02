@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -39,17 +40,20 @@ public class AppUserController {
     }
 
     @GetMapping("/books")
-    public String getBookView(Model model){
-        List<LibraryBook> libraryBookList = libraryBookRepository.findAll();
+    public String getBookView(Model model,@RequestParam(value = "search", defaultValue = "all") String search){
+        System.out.println(search);
+        List<LibraryBook> libraryBookList = new ArrayList<>();
+//        Set the defaultValue as "all", so when at first time visiting this page without entering keyword, the whole list will be shown
+        if (search.equals("all")){
+            libraryBookList = libraryBookRepository.findAll();
+        }else{ //When entering some keyword, it will be changed to the following method
+            libraryBookList = libraryBookRepository.findByTitleContainsIgnoreCase(search);
+            //When the list is empty, which means nothing matches the keyword or nothing found after entering keyword, a message will be shown
+            if (libraryBookList.size() < 1){
+                model.addAttribute("message","Your search '"+search+"' didn't match any book...");
+            }
+        }
         model.addAttribute("bookList",libraryBookList);
-        return "books-view";
-    }
-
-    //Method of Searching for a book or books
-    @GetMapping("/search")
-    public String findBook(@RequestParam(value = "search", required = false) String libraryBookTitle, Model model){
-        List<LibraryBook> searchedBookList = libraryBookRepository.findByTitleContainsIgnoreCase(libraryBookTitle);
-        model.addAttribute("searchResult", searchedBookList);
         return "books-view";
     }
 

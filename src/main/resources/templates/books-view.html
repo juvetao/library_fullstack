@@ -15,17 +15,11 @@
     <div class="container">
         <!-- In this page, every one can visit and search for book or books with the whole title of book or keyword of the title-->
         <h2>Search for a book/ books</h2>
-
-        <form th:object="${searchResult}" th:action="@{/search}" method="get">
+        <form th:object="${bookList}" th:action="@{/books}" method="get">
             <input type="text" name="search" id="search" placeholder="Enter the book title" />
             <input type="submit" value="Search">
-<!--            After entering keyword, there is no book whose title matches the keyword-->
-            <div th:if="${searchResult == null}">
-                <h2>No book found</h2>
-            </div>
 <!--            After entering keyword, there is a book/ books whose title match(es) the keyword-->
-            <div th:unless="${searchResult == null}">
-                <table class="table">
+                <table  th:if="${message == null}" class="table">
                     <thead>
                     <tr>
                         <th scope="col">Title</th>
@@ -33,24 +27,21 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <!--if make the input empty and press the Search button, all the books will be shown-->
-                    <tr th:if="${searchResult.isEmpty()}" th:each="book: ${bookList}">
-                        <td><span th:text="${book.title}"></span></td>
-                        <td><span th:text="${book.maxLoanDays}"></span></td>
-                        <td th:if="${book.isAvailable()}"><a class="btn btn-primary btn-sm" th:href="@{/create/loan/{id} (id=${book.libraryBookId})}">Borrow</a></td>
-                        <td th:if="${!book.isAvailable()}"><span>Not Available</span></td>
-                    </tr>
-                    <!-- Otherwise, after entering keyword, the book or books will be shown-->
-                    <tr th:unless="${searchResult.isEmpty()}" th:each="book: ${searchResult}">
+                    <br>If make the input empty and press the Search button, all the books will be shown
+                        <tr  th:each="book: ${bookList}">
                             <td><span th:text="${book.title}"></span></td>
                             <td><span th:text="${book.maxLoanDays}"></span></td>
                             <td th:if="${book.isAvailable()}"><a class="btn btn-primary btn-sm" th:href="@{/create/loan/{id} (id=${book.libraryBookId})}">Borrow</a></td>
                             <td th:if="${!book.isAvailable()}"><span>Not Available</span></td>
-                    </tr>
+                        </tr>
+
                     </tbody>
                 </table>
+<!--            If the keyword doesn't match, a message containing the keyword will be shown instead-->
+            <div th:unless="${message == null}">
+                <h4 class="alert" th:text="${message}"></h4>
             </div>
         </form>
-    </div>
-</body>
-</html>
+      </div>
+    </body>
+    </html>
